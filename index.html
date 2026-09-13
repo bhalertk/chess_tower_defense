@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>旗子保衛戰</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">⚑</div>
+          <div>
+            <p class="eyebrow">CHESS TOWER DEFENSE</p>
+            <h1>旗子保衛戰</h1>
+          </div>
+        </div>
+        <div class="top-stats">
+          <div class="stat"><span>回合</span><strong id="round">1 / 30</strong></div>
+          <div class="stat"><span>旗子</span><strong id="lives">3 <small>♥</small></strong></div>
+          <div class="stat money"><span>金幣</span><strong id="money">5</strong><b>₲</b></div>
+        </div>
+      </header>
+
+      <section class="game-layout">
+        <div class="board-wrap">
+          <div class="board-heading">
+            <div>
+              <p class="eyebrow">防守區域</p>
+              <h2 id="round-title">第 1 回合 · 新路線</h2>
+            </div>
+            <div class="route-chip"><i></i><span id="route-label">路線生成中</span></div>
+          </div>
+          <div class="arena">
+            <canvas id="game-canvas" width="900" height="560" aria-label="旗子保衛戰遊戲畫面"></canvas>
+            <div class="arena-message hidden" id="arena-message">
+              <div class="message-icon" id="message-icon">⚑</div>
+              <h2 id="message-title">準備開始</h2>
+              <p id="message-copy">派出士兵，守住你的旗子。</p>
+              <button class="primary-button" id="message-action">開始遊戲</button>
+            </div>
+          </div>
+          <div class="legend">
+            <span><i class="legend-dot enemy-pawn"></i>卒 · 1 HP</span>
+            <span><i class="legend-dot enemy-soldier"></i>兵 · 2 HP</span>
+            <span><i class="legend-dot enemy-horse"></i>馬 · 2 HP</span>
+            <span><i class="legend-dot enemy-queen"></i>瑪 · 3 HP</span>
+            <span><i class="legend-dot enemy-cannon"></i>炮 · 5 HP</span>
+            <span><i class="legend-dot enemy-bao"></i>包 · 4 HP</span>
+            <span><i class="legend-dot defender"></i>旗子士兵</span>
+            <span><i class="legend-dot cavalry"></i>旗子騎兵</span>
+            <span><i class="legend-dot bishop"></i>旗子主教</span>
+            <span><i class="legend-dot route-dot"></i>行進路線</span>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <section class="panel-card command-card">
+            <div class="panel-title">
+              <div><p class="eyebrow">指揮台</p><h3>部署防守</h3></div>
+              <span class="cooldown" id="cooldown">可部署</span>
+            </div>
+            <button class="deploy-button" id="deploy-button">
+              <span class="piece-icon">♟</span>
+              <span class="deploy-copy"><b>派出旗子士兵</b><small>從旗子出發 · 1 ₲ · <span id="soldier-cooldown">可部署</span></small></span>
+              <span class="cost">1 ₲</span>
+            </button>
+            <button class="deploy-button cavalry-button" id="cavalry-button">
+              <span class="piece-icon">♞</span>
+              <span class="deploy-copy"><b>派出旗子騎兵</b><small>衝向最近敵人 · 3 ₲ · <span id="cavalry-cooldown">可部署</span></small></span>
+              <span class="cost">3 ₲</span>
+            </button>
+            <button class="deploy-button bishop-button" id="bishop-button">
+              <span class="piece-icon">♝</span>
+              <span class="deploy-copy"><b>派出旗子主教</b><small>每 2 秒攻擊；每秒提升附近旗子最大 HP · 4 ₲ · <span id="bishop-cooldown">可部署</span></small></span>
+              <span class="cost">4 ₲</span>
+            </button>
+            <p class="hint">士兵碰撞造成 1 次傷害；騎兵會追向最近敵人，碰撞造成 2 次傷害。</p>
+            <div class="shortcut-hint"><span><kbd>1</kbd> 士兵</span><span><kbd>2</kbd> 騎兵</span><span><kbd>3</kbd> 主教</span></div>
+            <div class="game-tools">
+              <button class="tool-button" id="speed-button">⏩ <span id="speed-label">1x</span> <kbd>R</kbd></button>
+              <button class="tool-button" id="pause-button">⏸️ <span id="pause-label">暫停</span> <kbd>Space</kbd></button>
+            </div>
+          </section>
+
+          <section class="panel-card wave-card">
+            <div class="panel-title"><div><p class="eyebrow">波次情報</p><h3 id="wave-title">等待開始</h3></div><span class="wave-count" id="wave-count">0 / 5</span></div>
+            <div class="progress"><span id="wave-progress"></span></div>
+            <div class="wave-meta"><span id="wave-status">點擊開始遊戲</span><span id="timer">—</span></div>
+          </section>
+
+          <section class="panel-card tips-card">
+            <div class="panel-title"><div><p class="eyebrow">戰術提示</p><h3>守住終點</h3></div><span class="tip-mark">✦</span></div>
+            <p>第 4 回合起會出現馬與瑪；第 6 回合起會出現炮與包。炮每 1.5 秒前進 3 格，包每 2 秒前進 3 格。</p>
+            <div class="rule"><span>每 1.5 秒收入</span><b>+1 ₲</b></div>
+            <div class="rule"><span>部署冷卻減半</span><b>士兵 1 秒</b></div>
+          </section>
+
+          <button class="secondary-button" id="restart-button">↻ 重新開始</button>
+        </aside>
+      </section>
+
+      <footer><span>同一路線每回合延長</span><span>守住 30 回合即可勝利</span><span>© FLAGKEEPER</span></footer>
+    </main>
+    <script src="game.js"></script>
+  </body>
+</html>
