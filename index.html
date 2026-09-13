@@ -4,7 +4,100 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>旗子保衛戰</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+
+:root {
+  --ink: #182a25;
+  --muted: #70847d;
+  --paper: #f6f8f3;
+  --card: #ffffff;
+  --line: #dfe9e1;
+  --green: #1f6a55;
+  --green-bright: #53c29a;
+  --orange: #ee754d;
+  --gold: #e4ad43;
+  --shadow: 0 18px 50px rgba(28, 57, 43, .08);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--paper); font-family: 'Space Grotesk', system-ui, sans-serif; }
+.shell { max-width: 1400px; min-height: 100vh; margin: auto; padding: 18px 32px 14px; }
+.topbar, .game-layout, .board-heading, .panel-title, .wave-meta, footer { display: flex; align-items: center; justify-content: space-between; }
+.topbar { margin-bottom: 18px; }
+.brand { display: flex; gap: 14px; align-items: center; }
+.brand-mark { display: grid; place-items: center; width: 48px; height: 48px; color: #fff; background: var(--green); border-radius: 14px; font-size: 26px; box-shadow: 0 8px 16px rgba(31,106,85,.22); }
+.eyebrow { margin: 0 0 5px; color: var(--muted); font: 500 10px 'DM Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { margin-bottom: 0; font-size: 25px; letter-spacing: -.04em; }
+h2 { margin-bottom: 0; font-size: 22px; letter-spacing: -.04em; }
+h3 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
+.top-stats { display: flex; gap: 32px; }
+.stat { display: grid; gap: 4px; padding-left: 20px; border-left: 1px solid var(--line); }
+.stat span { color: var(--muted); font-size: 11px; }
+.stat strong { font: 600 18px 'DM Mono', monospace; }
+.stat small { color: var(--orange); font-size: 12px; }
+.money strong { color: var(--gold); display: inline; }
+.money b { color: var(--gold); margin-left: 4px; }
+.game-layout { align-items: stretch; gap: 26px; }
+.board-wrap { flex: 1; min-width: 0; }
+.board-heading { padding: 0 3px 15px; }
+.route-chip, .cooldown, .wave-count { color: var(--green); background: #e6f3ec; border-radius: 99px; font: 500 11px 'DM Mono', monospace; padding: 8px 12px; }
+.route-chip i { display: inline-block; width: 7px; height: 7px; margin-right: 7px; background: var(--green-bright); border-radius: 50%; }
+.arena { position: relative; overflow: hidden; aspect-ratio: 900 / 560; border: 1px solid #dae6dc; border-radius: 22px; background: #e7eee5; box-shadow: var(--shadow); }
+#game-canvas { display: block; width: 100%; height: 100%; }
+.arena-message { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; background: rgba(244, 248, 242, .87); backdrop-filter: blur(3px); }
+.arena-message.hidden { display: none; }
+.message-icon { margin: auto auto 10px; width: 52px; height: 52px; display: grid; place-items: center; color: #fff; background: var(--green); border-radius: 16px; font-size: 28px; }
+.arena-message h2 { margin-bottom: 6px; }
+.arena-message p { color: var(--muted); font-size: 14px; }
+.primary-button, .secondary-button, .deploy-button { border: 0; cursor: pointer; font: inherit; transition: .2s ease; }
+.primary-button { padding: 12px 20px; color: #fff; background: var(--green); border-radius: 10px; font-weight: 600; }
+.primary-button:hover, .deploy-button:hover:not(:disabled) { background: #174e40; transform: translateY(-1px); }
+.legend { display: flex; gap: 14px; padding: 10px 4px 0; color: var(--muted); font-size: 10px; }
+.legend span { display: flex; align-items: center; gap: 7px; }
+.legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.enemy-pawn { background: var(--orange); }.enemy-soldier { background: #a65370; }.enemy-horse { background: #6c62a8; }.enemy-queen { background: #b05c9f; }.enemy-cannon { background: #3f7f8f; }.enemy-bao { background: #8a694f; }.defender { background: var(--green-bright); }.cavalry { background: #d28b42; }.bishop { background: #8265b1; }.route-dot { background: #b4c8b8; }
+.side-panel { width: 315px; display: flex; flex-direction: column; gap: 14px; }
+.panel-card { padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); box-shadow: 0 8px 25px rgba(28,57,43,.035); }
+.panel-title { align-items: flex-start; margin-bottom: 17px; }
+.cooldown { color: #56736a; background: #f0f4f0; font-size: 10px; padding: 6px 9px; }
+.cooldown.active { color: #a96931; background: #fff3df; }
+.deploy-button { width: 100%; display: flex; align-items: center; gap: 11px; padding: 12px; color: var(--ink); background: #f1f7f1; border: 1px solid #d5e8d9; border-radius: 11px; text-align: left; }
+.piece-icon { display: grid; place-items: center; width: 34px; height: 34px; color: #fff; background: var(--green); border-radius: 9px; font-size: 20px; }
+.deploy-copy { display: grid; gap: 4px; flex: 1; font-size: 12px; }.deploy-copy small { color: var(--muted); font-size: 10px; }.cost { color: var(--gold); font: 600 12px 'DM Mono', monospace; }
+.deploy-button:disabled { cursor: not-allowed; opacity: .5; }
+.cavalry-button { margin-top: 9px; background: #fff8ed; border-color: #f0dfbf; }
+.cavalry-button .piece-icon { background: #b87833; }
+.bishop-button { margin-top: 9px; background: #f5f0fc; border-color: #dfd2f0; }
+.bishop-button .piece-icon { background: #8265b1; }
+.hint, .tips-card p { margin: 13px 2px 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.shortcut-hint { display: flex; gap: 10px; margin: 10px 2px 0; color: var(--muted); font-size: 10px; }
+kbd { min-width: 18px; display: inline-grid; place-items: center; padding: 2px 5px; color: var(--green); background: #eef5ef; border: 1px solid #d7e5d9; border-radius: 4px; font: 600 10px 'DM Mono', monospace; }
+.game-tools { display: flex; gap: 7px; margin-top: 12px; }
+.tool-button { flex: 1; padding: 8px 5px; color: var(--muted); background: #f8faf7; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; font-size: 10px; }
+.tool-button:hover, .tool-button.active { color: var(--green); background: #eaf5ed; border-color: #b9d8c0; }
+.tool-button kbd { margin-left: 3px; }
+.progress { height: 6px; margin-bottom: 10px; overflow: hidden; background: #edf1ed; border-radius: 99px; }.progress span { display: block; width: 0; height: 100%; background: var(--green-bright); border-radius: inherit; transition: width .25s; }
+.wave-meta { color: var(--muted); font: 10px 'DM Mono', monospace; }.tip-mark { color: var(--gold); font-size: 17px; }.rule { display: flex; justify-content: space-between; padding-top: 11px; margin-top: 11px; border-top: 1px solid #edf1ed; color: var(--muted); font-size: 11px; }.rule b { color: var(--green); font: 500 11px 'DM Mono', monospace; }
+.secondary-button { width: 100%; padding: 12px; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 10px; font-size: 12px; }.secondary-button:hover { color: var(--ink); border-color: #b4c9ba; background: white; }
+footer { padding: 14px 4px 0; color: #9aaba2; font: 10px 'DM Mono', monospace; }
+@media (max-width: 900px) { .shell { padding: 22px 18px; }.game-layout { flex-direction: column; }.side-panel { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }.command-card { grid-row: span 2; }.secondary-button { grid-column: span 2; }.top-stats { gap: 14px; }.stat { padding-left: 12px; } }
+@media (max-width: 560px) { .topbar { align-items: flex-start; gap: 18px; flex-direction: column; }.top-stats { width: 100%; justify-content: space-between; }.side-panel { display: flex; }.command-card { grid-row: auto; }.legend { flex-wrap: wrap; gap: 10px; } footer { gap: 8px; align-items: flex-start; flex-direction: column; } }
+@media (min-width: 901px) and (max-height: 780px) {
+  .shell { padding-top: 12px; padding-bottom: 8px; }
+  .topbar { margin-bottom: 12px; }
+  .brand-mark { width: 40px; height: 40px; }
+  h1 { font-size: 21px; }
+  h2 { font-size: 18px; }
+  .side-panel { gap: 9px; }
+  .panel-card { padding: 12px 14px; }
+  .panel-title { margin-bottom: 10px; }
+  .hint, .tips-card p { margin-top: 8px; }
+  .rule { padding-top: 7px; margin-top: 7px; }
+  .secondary-button { padding: 9px; }
+}
+
+    </style>
   </head>
   <body>
     <main class="shell">
@@ -103,6 +196,347 @@
 
       <footer><span>同一路線每回合延長</span><span>守住 30 回合即可勝利</span><span>© FLAGKEEPER</span></footer>
     </main>
-    <script src="game.js"></script>
+    <script>
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+const $ = (id) => document.getElementById(id);
+
+const GRID = { cols: 15, rows: 9, cell: 56 };
+const TOTAL_ROUNDS = 30;
+const STEP_MS = 1000;
+const INCOME_INTERVAL_MS = 1500;
+const COOLDOWNS = { soldier: 1000, cavalry: 2000, bishop: 3000 };
+const BASE_SOLDIER_CHANCE = 0.2;
+const FLAG_CONTACT_DISTANCE = 0.45;
+const MAX_DEFENDER_HP = { soldier: 2, cavalry: 3, bishop: 3 };
+const X_CELL = canvas.width / GRID.cols;
+let state;
+
+function makeState() {
+  return {
+    round: 1, money: 2, lives: 3, enemies: [], defenders: [], route: [], fullRoute: [],
+    started: false, waveActive: false, waveDone: false, ended: false,
+    spawnLeft: 0, spawnTimer: 0, lastStep: 0, lastIncome: 0,
+    cooldowns: { soldier: 0, cavalry: 0, bishop: 0 },
+    routeName: '固定路線', routeKey: '', flash: 0,
+    speed: 1, paused: false
+  };
+}
+
+function makeRoute() {
+  if (state.fullRoute.length === 0) {
+    const fullRoute = [{ x: 0, y: 4 }];
+    let y = 4;
+    for (let x = 1; x < GRID.cols; x += 1) {
+      const options = [y];
+      if (y > 1) options.push(y - 1);
+      if (y < GRID.rows - 2) options.push(y + 1);
+      y = options[Math.floor(Math.random() * options.length)];
+      fullRoute.push({ x, y });
+    }
+    state.fullRoute = fullRoute;
+  }
+  const routeLength = Math.min(15, 10 + state.round - 1);
+  state.route = state.fullRoute.slice(0, routeLength);
+  state.routeKey = state.route.map((point) => point.y).join(',');
+  state.routeName = `固定路線 · ${routeLength} 格`;
+  $('route-label').textContent = state.routeName;
+}
+
+function getWaveSize() {
+  return Math.max(1, Math.min(3 + Math.floor(state.round * 0.55) - 1, 12));
+}
+
+function startWave() {
+  if (state.ended) return;
+  state.started = true; state.waveActive = true; state.waveDone = false;
+  state.spawnLeft = getWaveSize();
+  state.spawnTimer = 0; state.lastStep = performance.now();
+  $('arena-message').classList.add('hidden');
+  $('wave-title').textContent = `第 ${state.round} 回合`;
+  updateUI();
+}
+
+function spawnEnemy() {
+  if (state.round >= 6) {
+    const specialRoll = Math.random();
+    if (specialRoll < 0.1) {
+      const becomesCannon = Math.random() < 0.2;
+      state.enemies.push(becomesCannon
+        ? { type: '炮', hp: 5, speed: 3, moveInterval: 1500, index: 0, moveAt: performance.now() }
+        : { type: '包', hp: 4, speed: 3, moveInterval: 2000, index: 0, moveAt: performance.now() });
+      state.spawnLeft -= 1;
+      return;
+    }
+  }
+  if (state.round >= 4) {
+    const specialRoll = Math.random();
+    if (specialRoll < 0.30) {
+      const becomesQueen = Math.random() < 0.2;
+      state.enemies.push(becomesQueen
+        ? { type: '瑪', hp: 3, speed: 2, moveInterval: STEP_MS, index: 0, moveAt: performance.now(), cargo: [] }
+        : { type: '馬', hp: 2, speed: 2, moveInterval: STEP_MS, index: 0, moveAt: performance.now() });
+      state.spawnLeft -= 1;
+      return;
+    }
+  }
+  const soldierChance = Math.min(BASE_SOLDIER_CHANCE + Math.floor((state.round - 1) / 5) * 0.02, 1);
+  const becomesSoldier = Math.random() < soldierChance;
+  state.enemies.push({ type: becomesSoldier ? '兵' : '卒', hp: becomesSoldier ? 2 : 1, speed: 1, moveInterval: STEP_MS, index: 0, moveAt: performance.now() });
+  state.spawnLeft -= 1;
+}
+
+function deploy(type = 'soldier') {
+  const cost = type === 'cavalry' ? 3 : type === 'bishop' ? 4 : 1;
+  if (!state.started || state.ended || state.money < cost || state.cooldowns[type] > 0) return;
+  state.money -= cost; state.cooldowns[type] = COOLDOWNS[type];
+  state.defenders.push({
+    type,
+    damage: type === 'cavalry' ? 2 : 1,
+    hp: type === 'cavalry' ? 2 : 1,
+    maxHp: type === 'cavalry' ? 2 : 1,
+    healAt: performance.now(),
+    attackAt: performance.now(),
+    index: state.route.length - 1,
+    moveAt: performance.now()
+  });
+  updateUI();
+}
+
+function advance() {
+  if (!state.waveActive || state.ended || state.paused) return;
+  const now = performance.now();
+  if (state.spawnLeft > 0 && now - state.lastStep >= 800 / state.speed) { spawnEnemy(); state.lastStep = now; }
+  if (now - state.lastIncome >= INCOME_INTERVAL_MS / state.speed) { state.money += 1; state.lastIncome = now; }
+  state.enemies.forEach((enemy) => {
+    if (now - enemy.moveAt >= enemy.moveInterval / state.speed) {
+      enemy.index += enemy.speed;
+      enemy.moveAt = now;
+      if (enemy.type === '瑪') carryNearbyEnemies(enemy);
+    }
+  });
+  const healedThisTick = new Set();
+  state.defenders.forEach((defender) => {
+    if (defender.type !== 'bishop' || now - defender.healAt < STEP_MS / state.speed) return;
+    state.defenders.forEach((nearby) => {
+      if (Math.abs(nearby.index - defender.index) <= 2 && !healedThisTick.has(nearby)) {
+        nearby.maxHp = Math.min(MAX_DEFENDER_HP[nearby.type], nearby.maxHp + 1);
+        healedThisTick.add(nearby);
+      }
+    });
+    defender.healAt = now;
+  });
+  const defeatedByBishop = new Set();
+  state.defenders.forEach((defender) => {
+    if (defender.type !== 'bishop' || now - defender.attackAt < (STEP_MS * 2) / state.speed) return;
+    const target = state.enemies.reduce((closest, enemy) => {
+      if (defeatedByBishop.has(enemy)) return closest;
+      if (!closest || Math.abs(enemy.index - defender.index) < Math.abs(closest.index - defender.index)) return enemy;
+      return closest;
+    }, null);
+    if (target) {
+      target.hp -= 1;
+      if (target.hp <= 0) defeatedByBishop.add(target);
+    }
+    defender.attackAt = now;
+  });
+  if (defeatedByBishop.size) {
+    state.enemies = state.enemies.filter((enemy) => !defeatedByBishop.has(enemy));
+  }
+  state.defenders.forEach((defender) => {
+    if (now - defender.moveAt >= STEP_MS / state.speed) {
+      if (defender.type === 'cavalry') {
+        const nearest = state.enemies.reduce((closest, enemy) => {
+          if (!closest || Math.abs(enemy.index - defender.index) < Math.abs(closest.index - defender.index)) return enemy;
+          return closest;
+        }, null);
+        defender.index += nearest && nearest.index > defender.index ? 1 : -1;
+      } else {
+        defender.index -= 1;
+      }
+      defender.moveAt = now;
+    }
+  });
+  state.cooldowns.soldier = Math.max(0, state.cooldowns.soldier - 50 * state.speed);
+  state.cooldowns.cavalry = Math.max(0, state.cooldowns.cavalry - 50 * state.speed);
+  state.cooldowns.bishop = Math.max(0, state.cooldowns.bishop - 50 * state.speed);
+  resolveCollisions();
+  const flagIndex = state.route.length - 1;
+  const reached = state.enemies.filter((e) => e.index >= flagIndex - FLAG_CONTACT_DISTANCE);
+  if (reached.length) {
+    state.lives -= reached.reduce((total, enemy) => total + 1 + (enemy.cargo ? enemy.cargo.length : 0), 0);
+    state.enemies = state.enemies.filter((e) => e.index < flagIndex - FLAG_CONTACT_DISTANCE);
+    state.flash = 20;
+    if (state.lives <= 0) endGame(false);
+  }
+  if (state.waveActive && state.spawnLeft === 0 && state.enemies.length === 0) finishWave();
+  updateUI();
+}
+
+function carryNearbyEnemies(carrier) {
+  const carried = [];
+  state.enemies = state.enemies.filter((enemy) => {
+    if (enemy === carrier || enemy.type === '馬' || enemy.type === '瑪') return true;
+    if (Math.abs(enemy.index - carrier.index) <= 0.5) {
+      carried.push(enemy);
+      return false;
+    }
+    return true;
+  });
+  carrier.cargo = [...(carrier.cargo || []), ...carried];
+  carrier.cargo.forEach((enemy) => { enemy.index = carrier.index; });
+}
+
+function resolveCollisions() {
+  const deadDefenders = new Set();
+  const deadEnemies = new Set();
+  state.defenders.forEach((defender, di) => {
+    state.enemies.forEach((enemy, ei) => {
+      if (!deadDefenders.has(di) && !deadEnemies.has(ei) && Math.abs(defender.index - enemy.index) <= 0.25) {
+        enemy.hp -= defender.damage;
+        deadDefenders.add(di);
+        if (enemy.hp <= 0) deadEnemies.add(ei);
+      }
+    });
+  });
+  const defeated = state.enemies.filter((_, i) => deadEnemies.has(i));
+  defeated.forEach((enemy) => {
+    if (enemy.type === '瑪' && enemy.cargo) state.enemies.push(...enemy.cargo.map((carried) => ({ ...carried, moveAt: performance.now() })));
+  });
+  state.defenders = state.defenders.filter((_, i) => !deadDefenders.has(i));
+  state.enemies = state.enemies.filter((_, i) => !deadEnemies.has(i));
+}
+
+function finishWave() {
+  if (state.round >= TOTAL_ROUNDS) return endGame(true);
+  state.round += 1; makeRoute();
+  $('round-title').textContent = `第 ${state.round} 回合 · 路線延長`;
+  startWave();
+}
+
+function endGame(won) {
+  state.ended = true; state.waveActive = false;
+  showMessage(won ? '♛' : '×', won ? '守住王城！' : '旗子失守', won ? '你成功守過全部 30 回合。' : '敵人突破了防線，再試一次吧。', won ? '再玩一次' : '重新挑戰');
+}
+
+function showMessage(icon, title, copy, action) {
+  $('arena-message').classList.remove('hidden'); $('message-icon').textContent = icon;
+  $('message-title').textContent = title; $('message-copy').textContent = copy; $('message-action').textContent = action;
+}
+
+function updateUI() {
+  $('round').textContent = `${state.round} / ${TOTAL_ROUNDS}`;
+  $('money').textContent = state.money;
+  $('lives').innerHTML = `${Math.max(0, state.lives)} <small>♥</small>`;
+  const waveSize = getWaveSize();
+  $('wave-count').textContent = `${Math.max(0, state.spawnLeft)} / ${waveSize}`;
+  $('wave-progress').style.width = `${state.spawnLeft ? 100 - state.spawnLeft / waveSize * 100 : (state.waveActive ? 100 : 0)}%`;
+  $('wave-status').textContent = state.waveActive ? (state.spawnLeft ? '敵人正在接近' : '清理剩餘敵人') : (state.waveDone ? '等待指揮官' : '點擊開始遊戲');
+  $('timer').textContent = state.waveActive ? 'LIVE' : '—';
+  const soldierCooling = state.cooldowns.soldier > 0;
+  const cavalryCooling = state.cooldowns.cavalry > 0;
+  const bishopCooling = state.cooldowns.bishop > 0;
+  $('cooldown').textContent = soldierCooling || cavalryCooling || bishopCooling ? '分開計算' : '可部署';
+  $('cooldown').classList.toggle('active', soldierCooling || cavalryCooling || bishopCooling);
+  $('soldier-cooldown').textContent = soldierCooling ? `${(state.cooldowns.soldier / 1000).toFixed(1)} 秒` : '可部署';
+  $('cavalry-cooldown').textContent = cavalryCooling ? `${(state.cooldowns.cavalry / 1000).toFixed(1)} 秒` : '可部署';
+  $('bishop-cooldown').textContent = bishopCooling ? `${(state.cooldowns.bishop / 1000).toFixed(1)} 秒` : '可部署';
+  $('deploy-button').disabled = !state.started || state.ended || state.money < 1 || soldierCooling;
+  $('cavalry-button').disabled = !state.started || state.ended || state.money < 3 || cavalryCooling;
+  $('bishop-button').disabled = !state.started || state.ended || state.money < 4 || bishopCooling;
+  $('speed-label').textContent = `${state.speed}x`;
+  $('pause-label').textContent = state.paused ? '繼續' : '暫停';
+  $('pause-button').classList.toggle('active', state.paused);
+}
+
+function draw() {
+  const t = performance.now();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#e7eee5'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  for (let x = 0; x < GRID.cols; x++) for (let y = 0; y < GRID.rows; y++) {
+    ctx.fillStyle = (x + y) % 2 ? 'rgba(255,255,255,.16)' : 'rgba(197,215,198,.12)';
+    ctx.fillRect(x * X_CELL, y * GRID.cell, X_CELL, GRID.cell);
+  }
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 28; ctx.strokeStyle = '#c0d1c1';
+  drawRoute(); ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,.8)'; drawRoute();
+  drawEndpoint(state.route[0], '↠', '#ee754d'); drawEndpoint(state.route[state.route.length - 1], '⚑', '#1f6a55');
+  state.enemies.forEach((enemy) => drawPiece(enemy, false, t));
+  state.defenders.forEach((defender) => drawPiece(defender, true, t));
+  if (state.flash > 0) { ctx.fillStyle = `rgba(238,117,77,${state.flash / 100})`; ctx.fillRect(0, 0, canvas.width, canvas.height); state.flash -= 1; }
+  requestAnimationFrame(draw);
+}
+
+function drawRoute() {
+  ctx.beginPath();   state.route.forEach((point, i) => { const x = point.x * X_CELL + X_CELL / 2; const y = point.y * GRID.cell + GRID.cell / 2; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.stroke();
+  state.route.forEach((point) => { ctx.fillStyle = 'rgba(255,255,255,.5)'; ctx.beginPath(); ctx.arc(point.x * X_CELL + X_CELL / 2, point.y * GRID.cell + 28, 3, 0, Math.PI * 2); ctx.fill(); });
+}
+
+function drawEndpoint(point, symbol, color) {
+  const x = point.x * X_CELL + X_CELL / 2;
+  const y = point.y * GRID.cell + 28;
+  ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = '22px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(symbol, x, y);
+}
+
+function drawPiece(piece, defender, now) {
+  const point = state.route[Math.max(0, Math.min(state.route.length - 1, Math.floor(piece.index)))];
+  const next = state.route[Math.max(0, Math.min(state.route.length - 1, Math.ceil(piece.index)))];
+  const ratio = piece.index - Math.floor(piece.index);
+  const x = (point.x + (next.x - point.x) * ratio) * X_CELL + X_CELL / 2;
+  const y = (point.y + (next.y - point.y) * ratio) * GRID.cell + 28;
+  ctx.fillStyle = defender ? (piece.type === 'cavalry' ? '#b87833' : piece.type === 'bishop' ? '#8265b1' : '#4caf87') : piece.type === '兵' ? '#a65370' : piece.type === '馬' ? '#6c62a8' : piece.type === '瑪' ? '#b05c9f' : piece.type === '炮' ? '#3f7f8f' : piece.type === '包' ? '#8a694f' : '#ee754d';
+  ctx.beginPath(); ctx.arc(x, y, defender ? 16 : 15, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = '#fff'; ctx.font = `${defender ? 19 : 17}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';     ctx.fillText(defender ? (piece.type === 'cavalry' ? '♞' : piece.type === 'bishop' ? '♝' : '♟') : piece.type, x, y + 1);
+  if (!defender && piece.hp > 1) { ctx.fillStyle = '#fff'; ctx.font = '9px "DM Mono"'; ctx.fillText(`${piece.hp}`, x + 11, y - 12); }
+}
+
+function restart() {
+  state = makeState();
+  makeRoute();
+  state.lastIncome = performance.now();
+  $('round-title').textContent = '第 1 回合 · 新路線';
+  $('wave-title').textContent = '等待開始';
+  updateUI();
+  showMessage('⚑', '準備開始', '派出士兵，守住你的旗子。', '開始遊戲');
+}
+
+function cycleSpeed() {
+  state.speed = state.speed === 3 ? 1 : state.speed + 1;
+  updateUI();
+}
+
+function togglePause() {
+  if (!state.started || state.ended) return;
+  state.paused = !state.paused;
+  const now = performance.now();
+  if (!state.paused) {
+    state.lastStep = now;
+    state.lastIncome = now;
+    state.enemies.forEach((enemy) => { enemy.moveAt = now; });
+    state.defenders.forEach((defender) => { defender.moveAt = now; });
+  }
+  updateUI();
+}
+
+$('deploy-button').addEventListener('click', deploy);
+$('cavalry-button').addEventListener('click', () => deploy('cavalry'));
+$('bishop-button').addEventListener('click', () => deploy('bishop'));
+$('message-action').addEventListener('click', () => { if (state.ended) restart(); else if (!state.started || state.waveDone) startWave(); });
+$('restart-button').addEventListener('click', restart);
+$('speed-button').addEventListener('click', cycleSpeed);
+$('pause-button').addEventListener('click', togglePause);
+document.addEventListener('keydown', (event) => {
+  if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+  if (event.code === 'Space') { event.preventDefault(); togglePause(); return; }
+  if (event.key.toLowerCase() === 'r') { cycleSpeed(); return; }
+  if (event.key === '1') deploy('soldier');
+  if (event.key === '2') deploy('cavalry');
+  if (event.key === '3') deploy('bishop');
+});
+state = makeState(); makeRoute(); state.lastIncome = performance.now(); updateUI(); showMessage('⚑', '準備開始', '派出士兵，守住你的旗子。', '開始遊戲');
+setInterval(advance, 50); draw();
+
+    </script>
   </body>
 </html>
