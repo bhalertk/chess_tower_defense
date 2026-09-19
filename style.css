@@ -50,7 +50,7 @@ h3 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
 .legend { display: flex; gap: 14px; padding: 10px 4px 0; color: var(--muted); font-size: 10px; }
 .legend span { display: flex; align-items: center; gap: 7px; }
 .legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
-.enemy-pawn { background: var(--orange); }.enemy-soldier { background: #a65370; }.enemy-horse { background: #6c62a8; }.enemy-queen { background: #b05c9f; }.enemy-cannon { background: #3f7f8f; }.enemy-bao { background: #8a694f; }.defender { background: var(--green-bright); }.cavalry { background: #d28b42; }.bishop { background: #8265b1; }.route-dot { background: #b4c8b8; }
+.enemy-pawn { background: var(--orange); }.enemy-soldier { background: #a65370; }.enemy-horse { background: #6c62a8; }.enemy-queen { background: #b05c9f; }.enemy-cannon { background: #3f7f8f; }.enemy-bao { background: #8a694f; }.enemy-chariot { background: #384f68; }.enemy-boss { background: #723f73; }.defender { background: var(--green-bright); }.cavalry { background: #d28b42; }.bishop { background: #8265b1; }.route-dot { background: #b4c8b8; }
 .side-panel { width: 315px; display: flex; flex-direction: column; gap: 14px; }
 .panel-card { padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); box-shadow: 0 8px 25px rgba(28,57,43,.035); }
 .panel-title { align-items: flex-start; margin-bottom: 17px; }
