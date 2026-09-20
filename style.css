@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
-  --ink: #182a25;
-  --muted: #70847d;
-  --paper: #f6f8f3;
-  --card: #ffffff;
-  --line: #dfe9e1;
+  --ink: #edf4ef;
+  --muted: #9aaea5;
+  --paper: #000000;
+  --card: #101412;
+  --line: #29332e;
   --green: #1f6a55;
   --green-bright: #53c29a;
   --orange: #ee754d;
@@ -37,9 +37,16 @@ h3 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
 .board-heading { padding: 0 3px 15px; }
 .route-chip, .cooldown, .wave-count { color: var(--green); background: #e6f3ec; border-radius: 99px; font: 500 11px 'DM Mono', monospace; padding: 8px 12px; }
 .route-chip i { display: inline-block; width: 7px; height: 7px; margin-right: 7px; background: var(--green-bright); border-radius: 50%; }
-.arena { position: relative; overflow: hidden; aspect-ratio: 900 / 560; border: 1px solid #dae6dc; border-radius: 22px; background: #e7eee5; box-shadow: var(--shadow); }
+.arena { position: relative; overflow: hidden; aspect-ratio: 900 / 560; border: 1px solid #29332e; border-radius: 22px; background: #000; box-shadow: var(--shadow); }
 #game-canvas { display: block; width: 100%; height: 100%; }
-.arena-message { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; background: rgba(244, 248, 242, .87); backdrop-filter: blur(3px); }
+.arena-message { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; background: rgba(0, 0, 0, .87); backdrop-filter: blur(3px); }
+.npc-event { position: absolute; inset: 28% 28%; z-index: 3; display: grid; place-content: center; gap: 6px; padding: 14px; text-align: center; background: rgba(255,250,235,.97); border: 2px solid #d6a93b; border-radius: 14px; box-shadow: 0 8px 22px rgba(70,50,15,.2); }
+.npc-event.hidden { display: none; }
+.npc-event h2 { margin: 0; color: #765719; }
+.npc-event p { margin: 0; color: var(--muted); }
+.npc-event-actions { display: flex; justify-content: center; gap: 8px; }
+.npc-event-actions button { padding: 6px 14px; border: 0; border-radius: 7px; cursor: pointer; font: inherit; }
+.npc-event-actions .yes { color: #fff; background: var(--green); }.npc-event-actions .no { color: #fff; background: #9a5960; }
 .arena-message.hidden { display: none; }
 .message-icon { margin: auto auto 10px; width: 52px; height: 52px; display: grid; place-items: center; color: #fff; background: var(--green); border-radius: 16px; font-size: 28px; }
 .arena-message h2 { margin-bottom: 6px; }
@@ -64,6 +71,12 @@ h3 { margin: 0; font-size: 16px; letter-spacing: -.02em; }
 .cavalry-button .piece-icon { background: #b87833; }
 .bishop-button { margin-top: 9px; background: #f5f0fc; border-color: #dfd2f0; }
 .bishop-button .piece-icon { background: #8265b1; }
+.queen-button { margin-top: 9px; background: #fbf1fc; border-color: #e7cfee; }
+.queen-button .piece-icon { background: #9b5bb5; }
+.king-button { margin-top: 9px; background: #fff9e8; border-color: #eadba3; }
+.king-button .piece-icon { background: #d6a93b; }
+.queen-button { margin-top: 9px; background: #fbf1fc; border-color: #e7cfee; }
+.queen-button .piece-icon { background: #9b5bb5; }
 .hint, .tips-card p { margin: 13px 2px 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
 .shortcut-hint { display: flex; gap: 10px; margin: 10px 2px 0; color: var(--muted); font-size: 10px; }
 kbd { min-width: 18px; display: inline-grid; place-items: center; padding: 2px 5px; color: var(--green); background: #eef5ef; border: 1px solid #d7e5d9; border-radius: 4px; font: 600 10px 'DM Mono', monospace; }
